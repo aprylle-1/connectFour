@@ -16,14 +16,15 @@ const board = []; // array of rows, each row is array of cells  (board[y][x])
  */
 
 function makeBoard() {
+    const row = [];
+    for (let x = 0; x < WIDTH; x++){
+      row[x] = null;
+    }
+    for (let y = 0; y < HEIGHT; y++){
+      const newRow = [...row]
+      board[y] = newRow;
+    }
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-  const row = [];
-  for (let x = 0; x < WIDTH ; x++){
-    row.push(null);
-  }
-  for (let x = 0; x < HEIGHT; x++){
-    board.push(row);
-  }
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
@@ -65,6 +66,13 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function findSpotForCol(x) {
+    for (let col = HEIGHT - 1; col >= 0; col--){
+      if(board[col][x] === null){
+        console.log(col);
+        return col
+      }
+    }
+    return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
@@ -75,38 +83,41 @@ function placeInTable(y, x) {
   const cell = document.getElementById(id)
   const piece = document.createElement('div');
   piece.classList.add('piece')
+  //logic for if p1/p2 is playing -> p1 css makes background color of div red
+  //p2 css makes background color of div blue
   if (currPlayer === 1){
     piece.classList.add('p1')
   }
-  else{
+  else if (currPlayer === 2){
     piece.classList.add('p2')
   }
-  currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
   cell.append(piece);
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
+  setTimeout(alert(msg), 1000);
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
   // get x from ID of clicked cell
-  var x = +evt.target.id;
+  const x = +evt.target.id;
 
   // get next spot in column (if none, ignore click)
-  var y = findSpotForCol(x);
+  const y = findSpotForCol(x);
   if (y === null) {
     return;
   }
 
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
-  placeInTable(y, x);
-
+    placeInTable(y, x);
+    if (y != null){
+      board[y][x] = currPlayer;
+    }
   // check for win
   if (checkForWin()) {
     return endGame(`Player ${currPlayer} won!`);
@@ -114,13 +125,29 @@ function handleClick(evt) {
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
+    if (checkForTie()){
+      endGame(`It's a tie`);
+    }
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
+      currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
-
+function checkForTie(){
+  let isNotTie
+  for (let y = HEIGHT - 1; y <= 0; y-- ){
+    let row = [...board[y]];
+    isNotTie = row.some(item => {
+      return item === null;
+    })
+    if(isNotTie){
+      return false;
+    }
+  }
+    return false;
+}
 function checkForWin() {
   function _win(cells) {
     // Check four cells to see if they're all color of current player
