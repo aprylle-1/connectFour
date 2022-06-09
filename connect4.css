@@ -13,6 +13,15 @@
   margin: 5px;
   width: 80%;
   height: 80%;
+  border-radius: 50px;
+}
+
+.p1{
+  background-color: red;
+}
+
+.p2{
+  background-color: blue;
 }
 
 /* TODO: make pieces red/blue,  depending on player 1/2 piece */
