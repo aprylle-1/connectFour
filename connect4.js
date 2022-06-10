@@ -125,8 +125,8 @@ function handleClick(evt) {
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
-    if (checkForTie()){
-      endGame(`It's a tie`);
+    if (!isNotTie()){
+      return endGame(`It's a tie`);
     }
 
   // switch players
@@ -135,18 +135,18 @@ function handleClick(evt) {
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
-function checkForTie(){
-  let isNotTie
-  for (let y = HEIGHT - 1; y <= 0; y-- ){
-    let row = [...board[y]];
-    isNotTie = row.some(item => {
-      return item === null;
+function isNotTie(){
+  //get rows of board
+  const rows = [...board]
+  //for each row check if a cell contains null/
+  //nested some may be a little too much
+  //TRY TO FIND A BETTER WAY FOR THIS!!!!!
+  const isNotATie = rows.some(row =>{
+    return row.some(cell =>{
+      return (cell===null)
     })
-    if(isNotTie){
-      return false;
-    }
-  }
-    return false;
+  })
+  return isNotATie;
 }
 function checkForWin() {
   function _win(cells) {
