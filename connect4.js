@@ -57,7 +57,7 @@ function makeHtmlBoard() {
     for (let x = 0; x < WIDTH; x++) {
       const cell = document.createElement("td");
       cell.setAttribute("id", `${y}-${x}`);
-      row.append(cell);
+      row.append(cell); 
     }
     htmlBoard.append(row);
   }
@@ -120,13 +120,19 @@ function handleClick(evt) {
     }
   // check for win
   if (checkForWin()) {
-    return endGame(`Player ${currPlayer} won!`);
+    const board = document.getElementById('board')
+    board.style.pointerEvents = 'none';
+    setTimeout(() => {
+      return endGame(`Player ${currPlayer} won!`)}, 500);
   }
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
     if (!isNotTie()){
-      return endGame(`It's a tie`);
+      const board = document.getElementById('board')
+      board.style.pointerEvents = 'none';
+      setTimeout(()=>{
+        return endGame(`It's a tie`)}, 500);
     }
 
   // switch players
@@ -200,5 +206,13 @@ function checkForWin() {
   }
 }
 
+const btnNewGame = document.getElementById('new-game');
+btnNewGame.addEventListener('click', () => {
+  const board = document.getElementById('board')
+  board.innerHTML = "";
+  board.style.pointerEvents = null;
+  makeBoard();
+  makeHtmlBoard();
+})
 makeBoard();
 makeHtmlBoard();
