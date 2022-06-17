@@ -122,8 +122,9 @@ function handleClick(evt) {
   if (checkForWin()) {
     const board = document.getElementById('board')
     board.style.pointerEvents = 'none';
+    const currPlayerNow = currPlayer
     setTimeout(() => {
-      return endGame(`Player ${currPlayer} won!`)}, 500);
+      return endGame(`Player ${currPlayerNow} won!`)}, 500);
   }
 
   // check for tie
